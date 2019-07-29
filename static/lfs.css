@@ -1,0 +1,260 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
+            
+.support {
+  align-items: center;
+  background: tomato;
+  color: #fff;
+  display: flex;
+  font-size: .9rem;
+  padding: 0 10px 0 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: auto;
+  z-index: 100;
+}
+.support a {
+  color: #fff;
+  padding: 10px 0;
+  text-decoration: none;
+}
+@supports (display: grid) {
+  .support {
+    background: #058a6e;
+    right: 40px;
+    -webkit-transform: translateX(100%);
+            transform: translateX(100%);
+    transition: right .5s ease-in-out, -webkit-transform .5s ease-in-out;
+    transition: right .5s ease-in-out, transform .5s ease-in-out;
+    transition: right .5s ease-in-out, transform .5s ease-in-out, -webkit-transform .5s ease-in-out;
+  }
+  .support:hover {
+    right: 0;
+    -webkit-transform: translateX(0%);
+            transform: translateX(0%);
+  }
+}
+
+.support svg {
+  fill: #ffffff;
+  height: 30px;
+  margin-right: 5px;
+  padding: 5px;
+  width: 30px;
+}
+
+.unsupported {
+  display: block;
+}
+@supports (display: grid) {
+  .unsupported {
+    display: none;
+  }
+}
+
+.supported {
+  display: none;
+}
+@supports (display: grid) {
+  .supported {
+    display: block;
+  }
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+}
+@media (min-width: 60em) {
+  main {
+    justify-content: flex-end;
+  }
+}
+@supports (display: grid) {
+  main {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (min-width: 60em) {
+    main {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+@media (min-width: 60em) {
+  .intro {
+    flex: 0 0 calc(50% - 3rem);
+    margin-left: calc(25% - 3rem);
+  }
+}
+@supports (display: grid) {
+  .intro {
+    grid-column: 1 / span 2;
+  }
+  @media (min-width: 60em) {
+    .intro {
+      grid-column: 2 / span 2;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+@media (min-width: 60em) {
+  .links {
+    order: 1;
+  }
+}
+@supports (display: grid) {
+  .links {
+    grid-column: 1 / span 2;
+  }
+  @media (min-width: 60em) {
+    .links {
+      grid-column: 4 / span 1;
+    }
+  }
+}
+
+@supports (display: grid) {
+  .content {
+    grid-column: 1 / span 2;
+  }
+  @media (min-width: 60em) {
+    .content {
+      grid-column: 2;
+    }
+  }
+}
+@media (min-width: 60em) {
+  .content {
+    flex: 0 0 calc(50% - 3rem);
+  }
+  @supports (display: grid) {
+    .content {
+      grid-column: 2 / span 2;
+    }
+  }
+}
+
+.account,
+.icons {
+  flex: 0 0 calc(50% - 3rem);
+}
+@media (min-width: 60em) {
+  @supports (display: flex) {
+    .account,
+    .icons {
+      flex: 0 0 calc(25% - 3rem);
+    }
+  }
+}
+
+/* // Styles:
+// ------------------------------------------------- */
+body {
+  background: #fff;
+  color: #5a5c6c;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 1rem;
+}
+
+div {
+  margin: 0.5rem;
+  padding: 0 1rem;
+}
+@media (min-width: 60em) {
+  @supports (display: flex) {
+    div {
+      flex: 0 0 calc(25% - 3rem);
+    }
+  }
+}
+div:hover {
+  background-color: #fbf9fa;
+}
+
+.page-title {
+  color: #7a1f5c;
+  font-size: calc(3rem + .25vw);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1rem auto;
+  max-width: calc(70rem + .25vw);
+  text-align: center;
+}
+
+.title {
+  font-weight: 300;
+  line-height: 1.3;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+  .title:first-letter {
+    color: #7a1f5c;
+    font-weight: 700;
+    initial-letter: 2;
+    -webkit-initial-letter: 2;
+  }
+}
+
+h2 {
+  line-height: 1.2;
+}
+
+p,
+.icons a,
+h3 {
+  margin-top: 1rem;
+}
+
+a {
+  color: #bf4080;
+}
+a:hover {
+  color: #7c1d46;
+}
+
+.icons {
+  display: flex;
+  justify-content: flex-end;
+}
+.icons a {
+  font-size: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.meta {
+  font-family: Georgia, serif;
+  font-size: calc(0.7rem + 0.25vw);
+  font-style: italic;
+}
+
+form label {
+    display: inline-block;
+    width: 100px;
+}
+
+input {
+  padding: 3px 5px;
+  margin: 6px 0;
+  box-sizing: border-box;
+}
+
+input:focus {
+  border: 1px solid #555;
+}
+
+footer {
+    height: 100px;
+    background: #eee;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -1,0 +1,5 @@
+# git config http.sslVerify false
+
+/.idea/
+/venv/
+__pycache__/
