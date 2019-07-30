@@ -1,5 +1,6 @@
-# FA2_2019
+# FA2_2019 Xander Gonzaga
 FA2 - this is the inital IA2 repository template 2019
+This repository is for Xander Gonzaga
 
 This contains the base for IA2.
 
