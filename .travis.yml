@@ -5,4 +5,4 @@ before_install:
 install:
   - pip install Flask
 script:
-  - app
+  - python app.py
