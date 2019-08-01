@@ -5,6 +5,7 @@ before_install:
 install:
   - pip install Flask
 script:
-  - travis encrypt e016c947-2cb6-4f3e-a6b9-9dfb259c21ff --add deploy.api_key
+  - skip
 deploy:
   provider: heroku
+  api_key: e016c947-2cb6-4f3e-a6b9-9dfb259c21ff
