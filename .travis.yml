@@ -8,4 +8,5 @@ script:
   - skip
 deploy:
   provider: heroku
+  app: fa2-xg29763
   api_key: e016c947-2cb6-4f3e-a6b9-9dfb259c21ff
