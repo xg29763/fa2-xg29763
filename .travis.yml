@@ -6,3 +6,4 @@ install:
   - pip install Flask
 script:
   - python app.py
+  - exit
