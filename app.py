@@ -40,5 +40,5 @@ def delivery():
     return render_template(template)
 
 
-app.run(debug=False, port=80)
-
+if __name__ == '__main__':
+    app.run()
