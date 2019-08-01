@@ -1,4 +1,5 @@
 from flask import *
+
 app = Flask(__name__)
 
 template = "lfs.html"
