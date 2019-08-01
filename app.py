@@ -40,5 +40,5 @@ def delivery():
     return render_template(template)
 
 
-app.run(debug=False)
+app.run(debug=False, port=80)
 
