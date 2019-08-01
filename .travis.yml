@@ -5,7 +5,7 @@ before_install:
 install:
   - pip install Flask
 script:
-  - exit(0)
+  - skip
 deploy:
   provider: heroku
   api_key:
