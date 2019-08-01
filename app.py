@@ -39,5 +39,5 @@ def delivery():
     return render_template(template)
 
 
-app.run(debug=True)
+app.run(debug=False)
 
