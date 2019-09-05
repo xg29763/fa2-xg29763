@@ -24,10 +24,10 @@
         <p><i class="fa fa-lock"></i> <a href="/delivery">Driver assistance</a></p>
 	</div>
 	<div class="content">
-	     <form action="/login" method="post">
+	     <form action="/login" method="post" name="LoginForm">
             <label for="username">Username:</label> <input type="text" name="username" required><br>
-            <label for="password">Password:</label> <input type="password" name="password" required>
-            <input type="submit" value="Login">
+            <label for="password">Password:</label> <input type="password" name="password" required><br>
+             <input type="submit" name="submit" id="submit" value="Login">
         </form>
 		<p>We have one large warehouse where we operate our entire delivery service from, which is located in the main street of town. Bring your articles of postage to our customer service outlet at the front of the warehouse, where our customer service attendant will receive your article and tender the delivery fee. Within 24 hours your article is processed and dispatched by the Delivery Dispatch Manager to a Courier for delivery.</p>
 	</div>
@@ -40,3 +40,5 @@
     </p>
 </footer>
 <script src="{{ url_for('static',filename='lfs.js') }}"></script>
+<script>
+</script>
