@@ -21,7 +21,7 @@
                 <hr class="sidebar-divider my-0">
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item" role="presentation"><a class="nav-link" href="{{url_for('admin')}}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="{{url_for('adminCustomers')}}"><i class="fas fa-user-alt"></i><span>Customers</span></a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="{{url_for('adminCustomers')}}"><i class="fas fa-user-alt"></i><span>Customers</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="{{url_for('adminArticles')}}"><i class="fas fa-cube"></i><span>Articles</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="{{url_for('adminEmployees')}}"><i class="far fa-id-badge"></i><span>Employees</span></a></li>
                 </ul>
@@ -65,7 +65,7 @@
                             </li>
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow" role="presentation">
-                                <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">NAME PLACEHOLDER</span><img class="border rounded-circle img-profile" src="../static/assets/staffAssets/img/avatars/avatar5.jpeg"></a>
+                                <li class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">{{name}}</span><img class="border rounded-circle img-profile" src="../static/assets/staffAssets/img/avatars/avatar5.jpeg"></a>
                                     <div
                                         class="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu"><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" role="presentation" href="#"><i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Settings</a>
                                         <a
@@ -99,11 +99,11 @@
                                         </thead>
                                         <tbody>
                                         {% for customer in customers %}
-                                            <tr>
+                                            <tr id="{{customer[0]}}">
                                                 <td class="text-truncate">{{customer[0]}}</td>
                                                 <td>{{customer[1]}}<br></td>
                                                 <td>{{addresses[customer[2] - 1][1]}} {{addresses[customer[2] - 1][2]}} {{addresses[customer[2] - 1][3]}} {{addresses[customer[2] - 1][4]}} {{addresses[customer[2] - 1][5]}}<br></td>
-                                                <td>{{customer[3]}}<br></td>
+                                                <td><a href="{{url_for("adminEmployees")}}#{{customer[3]}}">{{customer[3]}}</a><br></td>
                                                 <td><br>
                                                     <div class="dropdown no-arrow" style="width: 15px;"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
                                                         <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in"
