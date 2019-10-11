@@ -20,6 +20,10 @@ def consolePrint(prefix, message):
 def root():
     return render_template(template)
 
+@app.route("/calculator")
+def calculator():
+    return render_template("calculator.html")
+
 
 """
 @app.route("/track", methods=["POST"])
@@ -57,6 +61,12 @@ def login():
         except (ValueError, KeyError, TypeError) as error:
             print("Error in Authenticating:", error)
             return render_template(loginTemplate)
+    with sqlite3.connect(database) as lfs_db:
+        c = lfs_db.cursor()
+        _session = request.cookies.get("sKey")
+        _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
+        if _verify is not None:
+            return redirect(url_for("admin"))
     return render_template(loginTemplate)
 
 
@@ -74,13 +84,14 @@ def admin():
                 _cc = c.execute("SELECT COUNT(*) FROM lfs_customers").fetchone()[0]
                 _ec = c.execute("SELECT COUNT(*) FROM lfs_users").fetchone()[0]
                 _ac = c.execute("SELECT COUNT(*) FROM lfs_articles").fetchone()[0]
+                _n = c.execute("SELECT name FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()[0]
             except:
-                print("Unauthenticated? SQL?")
+                consolePrint("Dashboard,", "Possible Unauthenticated Access. SQL?")
                 return redirect(url_for('login'))
-            print("Authenticated?")
-            return render_template(dashboardTemplate, customerCount=_cc, employeeCount=_ec, articleCount=_ac)
+            consolePrint("Dashboard", "User Authenticated")
+            return render_template(dashboardTemplate, customerCount=_cc, employeeCount=_ec, articleCount=_ac, name=_n)
         else:
-            print("Unauthenticated?")
+            consolePrint("Dashboard", "Unauthenticated Access")
             return redirect(url_for('login'))
 
 
@@ -103,7 +114,20 @@ def adminArticles():
 
 @app.route("/admin/employees")
 def adminEmployees():
-    return render_template("staff/employees.html")
+    with sqlite3.connect(database) as lfs_db:
+        c = lfs_db.cursor()
+        _session = request.cookies.get("sKey")
+        _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
+        if _verify is not None:
+            try:
+                _employees = c.execute("SELECT * FROM lfs_users").fetchall()
+                _roles = c.execute("SELECT * FROM lfs_roles").fetchall()
+                _n = c.execute("SELECT name FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()[0]
+            except:
+                return render_template("staff/employees.html")
+            return render_template("staff/employees.html", employees=_employees, roles=_roles, name=_n)
+        else:
+            return redirect(url_for("login"))
 
 
 @app.route("/admin/customers")
@@ -123,83 +147,6 @@ def adminCustomers():
         else:
             return redirect(url_for("login"))
 
-@app.route("/admin/articles/createarticle", methods=["POST"])
-def createArticle():
-    with sqlite3.connect(database) as lfs_db:
-        c = lfs_db.cursor()
-        _session = request.cookies.get("sKey")
-        _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
-        if _verify is not None:
-            if request.method == 'POST':
-                try:
-                    _trackingId = str(uuid.uuid1())[4:18]
-                    _sender = request.form["sender"]
-                    _receiver = request.form["receiver"]
-                    _articleDesc = request.form["articledesc"]
-                    _dangerousGoods = request.form["dangerousgoods"]
-                    _deliveryStatus = "PROCESSING"
-                    _deliveryList = None
-                    c.execute("INSERT INTO lfs_articles \
-                    (trackingId, receiverNumber, senderNumber, dangerousGoods, deliveryStatus, deliveryList, articleDesc) \
-                    VALUES (?, ?, ?, ?, ?, ?, ?)",
-                    (_trackingId, _receiver, _sender, _dangerousGoods, _deliveryStatus, _deliveryList, _articleDesc))
-                    consolePrint("createArticle", ("Created Article:", _trackingId))
-                    return redirect(url_for("adminArticles"))
-                except (ValueError, KeyError, TypeError) as error:
-                    consolePrint("createArticles", error)
-                return redirect(url_for("adminArticles"))
-            else:
-                return ("../createArticles does not exist")
-        else:
-            return redirect(url_for("login"))
-
-
-@app.route("/admin/customers/createCustomer", methods=["POST"])
-def createCustomer():
-    with sqlite3.connect(database) as lfs_db:
-        c = lfs_db.cursor()
-        _session = request.cookies.get("sKey")
-        _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
-        if _verify is not None:
-            if request.method == 'POST':
-                try:
-                    _name = request.form["cname"]
-                    _address1 = request.form["address1"]
-                    _address2 = request.form["address2"]
-                    _suburb = request.form["suburb"]
-                    _postcode = request.form["postcode"]
-                    _state = request.form["state"]
-                    with sqlite3.connect(database) as lfs_db:
-                        c = lfs_db.cursor()
-                        _existingAddressId = c.execute(
-                            "SELECT addressId FROM lfs_addresses WHERE addressLine1=? AND addressLine2=? AND suburb=? AND postcode=? AND state=?",
-                            (_address1, _address2, _suburb, _postcode, _state)).fetchone()
-                        print(_existingAddressId)
-                        if _existingAddressId is None:
-                            c.execute("\
-                                INSERT INTO lfs_addresses (addressLine1, addressLine2, suburb, postcode, state) VALUES (?, ?, ?, ?, ?)",
-                                      (_address1, _address2, _suburb, _postcode, _state)
-                                      )
-                            _addressId = c.lastrowid
-
-                            c.execute("INSERT INTO lfs_customers (alias, addressId) VALUES (?, ?)", (_name, _addressId))
-                            consolePrint("createCustomer", ("Created Customer and Address:", _name))
-                        elif _existingAddressId is not None:
-                            c.execute("INSERT INTO lfs_customers (alias, addressId) VALUES (?, ?)",
-                                      (_name, _existingAddressId))
-                            consolePrint("createCustomer", ("Created Customer:", _name))
-                        else:
-                            consolePrint("createCustomer", "ERROR")
-                        return redirect(url_for("adminCustomers"))
-                except (ValueError, KeyError, TypeError) as error:
-                    consolePrint("createCustomer", error)
-                return redirect(url_for("adminCustomers"))
-            else:
-                return ("../createCustomer does not exist")
-        else:
-            return redirect(url_for("login"))
-
-
 @app.route("/logout")
 def logout():
     with sqlite3.connect(database) as lfs_db:
@@ -210,6 +157,94 @@ def logout():
         _response.set_cookie('sKey', value="")
         return _response
 
+@app.route("/admin/action/<act>", methods=["POST", "GET"])
+def action(act=None):
+    if act is not None:
+        with sqlite3.connect(database) as lfs_db:
+            c = lfs_db.cursor()
+            _session = request.cookies.get("sKey")
+            _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
+            if _verify is not None:
+                _userRole = _verify[5]
+                if request.method == "GET":
+                    if act == "logout":
+                        _response = make_response(redirect(url_for('root')))
+                        c.execute("UPDATE lfs_users SET currentSession = ? WHERE currentSession = ?", (None, _session,))
+                        _response.set_cookie('sKey', value="")
+                        return _response
+
+                if request.method == "POST":
+                    if act == "createCustomer":
+                        try:
+                            _name = request.form["cname"]
+                            _address1 = request.form["address1"]
+                            _address2 = request.form["address2"]
+                            _suburb = request.form["suburb"]
+                            _postcode = request.form["postcode"]
+                            _state = request.form["state"]
+                            _existingAddressId = c.execute(
+                                "SELECT addressId FROM lfs_addresses WHERE addressLine1=? AND addressLine2=? AND suburb=? AND postcode=? AND state=?",
+                                (_address1, _address2, _suburb, _postcode, _state)).fetchone()
+                            print(_existingAddressId)
+                            if _existingAddressId is None:
+                                c.execute("\
+                                    INSERT INTO lfs_addresses (addressLine1, addressLine2, suburb, postcode, state) VALUES (?, ?, ?, ?, ?)",
+                                          (_address1, _address2, _suburb, _postcode, _state)
+                                          )
+                                _addressId = c.lastrowid
+
+                                c.execute("INSERT INTO lfs_customers (alias, addressId) VALUES (?, ?)",
+                                          (_name, _addressId))
+                                consolePrint("createCustomer", ("Created Customer and Address:", _name))
+                            elif _existingAddressId is not None:
+                                c.execute("INSERT INTO lfs_customers (alias, addressId) VALUES (?, ?)",
+                                          (_name, _existingAddressId))
+                                consolePrint("createCustomer", ("Created Customer:", _name))
+                            else:
+                                consolePrint("createCustomer", "ERROR")
+                                return redirect(url_for("adminCustomers"))
+                        except (ValueError, KeyError, TypeError) as error:
+                            consolePrint("createCustomer", error)
+                        return redirect(url_for("adminCustomers"))
+                    elif act == "createEmployee":
+                        try:
+                            _name = request.form["ename"]
+                            _email = request.form["eemail"]
+                            _password = hashlib.sha256(request.form["epass"].encode('utf-8')).hexdigest()
+                            _access = request.form["eaccess"]
+                            _existingEmail = c.execute("SELECT email FROM lfs_users WHERE email=?",
+                                                       (_email,)).fetchone()
+                            print(_existingEmail)
+                            if _existingEmail is None:
+                                c.execute(
+                                    "INSERT INTO lfs_users (name, email, username, password, roleId, currentSession) VALUES (?, ?, ?, ?, ?, ?)",
+                                    (_name, _email, None, _password, _access, None))
+                            else:
+                                consolePrint("createEmployee",
+                                             "Error creating user account. Does the EMail already exist?")
+                                return ("Could not create new account. Email address already exists.")
+                        except (ValueError, KeyError, TypeError) as error:
+                            consolePrint("createEmployee", error)
+                        return redirect(url_for("adminEmployees"))
+                    elif act == "createArticle":
+                        try:
+                            _trackingId = str(uuid.uuid4())[0:16].replace("-", "")  # Replaces all instances of "-" from the UUID and replaces it with nothing
+                            _sender = request.form["sender"]
+                            _receiver = request.form["receiver"]
+                            _articleDesc = request.form["articledesc"]
+                            _dangerousGoods = request.form["dangerousgoods"]
+                            _deliveryStatus = "PROCESSING"
+                            _deliveryList = None
+                            c.execute("INSERT INTO lfs_articles \
+                            (trackingId, receiverNumber, senderNumber, dangerousGoods, deliveryStatus, deliveryList, articleDesc) \
+                            VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                      (_trackingId, _receiver, _sender, _dangerousGoods, _deliveryStatus, _deliveryList,
+                                       _articleDesc))
+                            consolePrint("createArticle", ("Created Article:", _trackingId))
+                            return redirect(url_for("adminArticles"))
+                        except (ValueError, KeyError, TypeError) as error:
+                            consolePrint("createArticles", error)
+                        return redirect(url_for("adminArticles"))
 
 @app.route("/tracker", methods=["POST", "GET"])
 def tracker():

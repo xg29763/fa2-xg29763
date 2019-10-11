@@ -24,7 +24,7 @@
             <div class="row" style="padding-bottom: 60px;">
                 <div class="col">
                     <h1>Tracking your item here:</h1>
-                    <p><strong>Example</strong>&nbsp;:<em> (b120e0da-cdf5-11e9-b8c3-9cda3e860d6b)</em><br></p>
+                    <p><strong>Example</strong>&nbsp;:<em> (e0da-cdf5-11e9)</em><br></p>
                     <form action="{{ url_for('tracker') }}" method="post">
                         <div class="form-row">
                             <div class="col"><input class="form-control" type="text" name="trackingId"></div>
@@ -51,7 +51,7 @@
                     <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
                         <div class="d-flex features-icons-icon"><i class="icon-calculator m-auto text-primary" data-bs-hover-animate="pulse"></i></div>
                         <h3>Calculate Postage</h3>
-                        <p class="lead mb-0">Grab an estimated cost for the package using the LFS Calculator</p>
+                        <p class="lead mb-0">Grab an estimated cost for the package using the LFS Calculator <a href="{{ url_for("calculator") }}">here!</a></p>
                     </div>
                 </div>
                 <div class="col-lg-4">
