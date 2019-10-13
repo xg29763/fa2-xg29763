@@ -303,6 +303,25 @@ def action(act=None):
                         except (ValueError, KeyError, TypeError) as error:
                             consolePrint(False, "createArticles", error)
                         return redirect(url_for("adminArticles"))
+                    elif act == "updateArticleStatus":
+                        try:
+                            _id = request.form.allkeys
+                            currentStatus = c.execute("SELECT deliveryStatus FROM lfs_articles WHERE trackingId = ?", (_id,)).fetchone()
+                            if currentStatus == "PROCESSING":
+                                newStatus = "DELIVERING"
+                            elif currentStatus == "DELIVERING":
+                                newStatus = "DELIVERED"
+                            elif currentStatus == "DELIVERED":
+                                newStatus = "NO INFORMATION"
+                            elif currentStatus == "NO INFORMATION":
+                                newStatus = "DELIVERING"
+                            else:
+                                newStatus = "NO INFORMATION"
+                            consolePrint(True, "ArticleStatus", "Updating Status of " + _id + " to " + newStatus)
+                            c.execute("UPDATE lfs_articles SET deliveryStatus = ? WHERE trackingId = ?", (newStatus, _id,))
+                        except (ValueError, KeyError, TypeError) as error:
+                            consolePrint(False, "updateArticleStatus", error)
+                        return redirect(url_for("adminArticles"))
 
 
 ########################################################
