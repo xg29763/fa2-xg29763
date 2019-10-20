@@ -26,7 +26,7 @@ database = "data/database.db"
 ####################################
 appPrefix = "LFS"  # 1
 appSCK = "sKey"  # 2
-appDebug = True
+appDebug = True  # 3
 
 
 ########################################################################################################################
@@ -75,29 +75,29 @@ def login():
         _password = request.form['password'].encode('utf-8')  # Retrieves the 'password' input from the form from /login
         consolePrint(True, "../login Debug", (_email, _password, hashlib.sha256(_password).hexdigest()))
         try:
-            with sqlite3.connect('data/database.db') as lfs_db:
+            with sqlite3.connect('data/database.db') as lfs_db:  # Maintain connection to the database while processing the data from here
                 c = lfs_db.cursor()
                 print(c.execute("SELECT password FROM lfs_users WHERE email = ?", (_email,)).fetchone()[0])
                 if c.execute("SELECT password FROM lfs_users WHERE email = ?", (_email,)).fetchone()[
-                    0] == hashlib.sha256(_password).hexdigest():
-                    _response = make_response(redirect(url_for('admin')))
-                    _userUuid = str(uuid.uuid1())
+                    0] == hashlib.sha256(_password).hexdigest():  # IF Statement that checks the whether the password that the email that they the user supplied is correct
+                    _response = make_response(redirect(url_for('admin')))  # Creates a response object which contains web redirection, cookies and many more.
+                    _userUuid = str(uuid.uuid1())  # Generates a Universal Unique Identification for Session Keys for the User and Database
                     # Set the Current Session the the unique userUuid
-                    c.execute("UPDATE lfs_users SET currentSession = ? WHERE email = ?", (_userUuid, _email))
+                    c.execute("UPDATE lfs_users SET currentSession = ? WHERE email = ?", (_userUuid, _email))  # Updates the User's currentSession field with the above generated UUID
                     consolePrint(True, request.remote_addr, ("Session Created:", _userUuid))
                     # Set the Browser Cookies for userSession and username
-                    _response.set_cookie(appSCK, value=_userUuid)
-                    return _response
+                    _response.set_cookie(appSCK, value=_userUuid)  # Sets the Session Key into a Cookie on the User's Browser
+                    return _response  # Return the Response object to the User's Browser
                 else:
                     print("Unauthenticated Access")
                     return render_template(loginTemplate)
-        except (ValueError, KeyError, TypeError) as error:
+        except (ValueError, KeyError, TypeError) as error:  # If there is an error in the above code that matches Value, Key or Type Error, then run this code
             print("Error in Authenticating:", error)
             return render_template(loginTemplate)
     with sqlite3.connect(database) as lfs_db:
         c = lfs_db.cursor()
-        _session = request.cookies.get(appSCK)
-        _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
+        _session = request.cookies.get(appSCK)  # Checks whether there is an existing session code and grabs it
+        _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()  # Verifies the Session Key by comparing it to the one in the database
         if _verify is not None:
             return redirect(url_for("admin"))
     return render_template(loginTemplate)
@@ -115,7 +115,7 @@ def admin():
         _verify = c.execute("SELECT * FROM lfs_users WHERE currentSession = ?", (_session,)).fetchone()
         if _verify is not None:
             try:
-                _alias = c.execute("SELECT name FROM lfs_users WHERE currentSession = ?", (_session,))
+                _alias = c.execute("SELECT name FROM lfs_users WHERE currentSession = ?", (_session,))  # Stores the name field from the users table into a variable
                 _uid = c.execute("SELECT userId FROM lfs_users WHERE currentSession = ?", (_session,))
                 _cc = c.execute("SELECT COUNT(*) FROM lfs_customers").fetchone()[0]
                 _ec = c.execute("SELECT COUNT(*) FROM lfs_users").fetchone()[0]
@@ -290,14 +290,15 @@ def action(act=None):
                             _sender = request.form["sender"]
                             _receiver = request.form["receiver"]
                             _articleDesc = request.form["articledesc"]
+                            _weight = request.form["weight"]
                             _dangerousGoods = request.form["dangerousgoods"]
                             _deliveryStatus = "PROCESSING"
                             _deliveryList = None
                             c.execute("INSERT INTO lfs_articles \
-                            (trackingId, receiverNumber, senderNumber, dangerousGoods, deliveryStatus, deliveryList, articleDesc) \
-                            VALUES (?, ?, ?, ?, ?, ?, ?)",
+                            (trackingId, receiverNumber, senderNumber, dangerousGoods, deliveryStatus, deliveryList, articleDesc, weight) \
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                                       (_trackingId, _receiver, _sender, _dangerousGoods, _deliveryStatus, _deliveryList,
-                                       _articleDesc))
+                                       _articleDesc, _weight))
                             consolePrint(True, "createArticle", ("Created Article:", _trackingId))
                             return redirect(url_for("adminArticles"))
                         except (ValueError, KeyError, TypeError) as error:
@@ -305,8 +306,8 @@ def action(act=None):
                         return redirect(url_for("adminArticles"))
                     elif act == "updateArticleStatus":
                         try:
-                            _id = request.form.allkeys
-                            currentStatus = c.execute("SELECT deliveryStatus FROM lfs_articles WHERE trackingId = ?", (_id,)).fetchone()
+                            _id = request.form["articleId"]
+                            currentStatus = c.execute("SELECT deliveryStatus FROM lfs_articles WHERE trackingId = ?", (_id,)).fetchone()[0]
                             if currentStatus == "PROCESSING":
                                 newStatus = "DELIVERING"
                             elif currentStatus == "DELIVERING":
@@ -314,10 +315,10 @@ def action(act=None):
                             elif currentStatus == "DELIVERED":
                                 newStatus = "NO INFORMATION"
                             elif currentStatus == "NO INFORMATION":
-                                newStatus = "DELIVERING"
+                                newStatus = "PROCESSING"
                             else:
                                 newStatus = "NO INFORMATION"
-                            consolePrint(True, "ArticleStatus", "Updating Status of " + _id + " to " + newStatus)
+                            consolePrint(True, "ArticleStatus", "Updating Status of " + _id + " to " + newStatus + " from " + currentStatus)
                             c.execute("UPDATE lfs_articles SET deliveryStatus = ? WHERE trackingId = ?", (newStatus, _id,))
                         except (ValueError, KeyError, TypeError) as error:
                             consolePrint(False, "updateArticleStatus", error)

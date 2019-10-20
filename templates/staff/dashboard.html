@@ -1,6 +1,6 @@
-<!DOCTYPE html>
+<!DOCTYPE html> {# Specifies DOCUMENT TYPE #}
 <html>
-
+{# Website information regarding Styling, Titles, Web Info, encoding, javascript, etc. #}
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -10,16 +10,17 @@
     <link rel="stylesheet" href="../static/assets/staffAssets/fonts/fontawesome-all.min.css">
 </head>
 
-<body id="page-top">
+<body id="page-top"> {# Start of the Body Content with an ID "Page-top" that can be used to scroll back to in the browser #}
     <div id="wrapper">
+        {# Bootstrap Classing and CSS Style Sheets #}
         <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
             <div class="container-fluid d-flex flex-column p-0">
                 <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
                     <div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-truck"></i></div>
-                    <div class="sidebar-brand-text mx-3"><span>LFS staff&nbsp;</span></div>
+                    <div class="sidebar-brand-text mx-3"><span>LFS staff&nbsp;</span></div> {# Sidebar title #}
                 </a>
                 <hr class="sidebar-divider my-0">
-                <ul class="nav navbar-nav text-light" id="accordionSidebar">
+                <ul class="nav navbar-nav text-light" id="accordionSidebar"> {# Sidebar menu that leads to flask defined webpage templates #}
                     <li class="nav-item" role="presentation"><a class="nav-link active" href="{{url_for("admin")}}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="{{url_for("adminCustomers")}}"><i class="fas fa-user-alt"></i><span>Customers</span></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" href="{{url_for("adminArticles")}}"><i class="fas fa-cube"></i><span>Articles</span></a></li>

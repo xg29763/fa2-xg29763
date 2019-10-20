@@ -1,44 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html> {# Specifies the Document Type. This being HTML #}
+<html> {# Specifies the start of the HTML code #}
 
-<head>
+<head> {# The Head of the Document, Containing Website Information and generally no visible content #}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Home - Local Freight Services</title>
-    <link rel="stylesheet" href="../static/assets/bootstrap/css/bootstrap.min.css">
+    <title>Home - Local Freight Services</title> {# Title for the Website that appears on the top of the website tab #}
+    <link rel="stylesheet" href="../static/assets/bootstrap/css/bootstrap.min.css"> {# Assets that need to be loaded for the website #}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
     <link rel="stylesheet" href="../static/assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="../static/assets/fonts/simple-line-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 </head>
 
-<body>
-    <nav class="navbar navbar-light navbar-expand bg-light navigation-clean">
-        <div class="container"><a class="navbar-brand" href="#">Local Freight Services</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
-            <div class="collapse navbar-collapse" id="navcol-1"><a class="btn btn-primary ml-auto" role="button" href="{{ url_for('login') }}">Sign In</a></div>
-        </div>
-    </nav>
-    <header class="masthead text-white text-center" style="background: url('../static/assets/img/bg-masthead.jpg')no-repeat center center;background-size: cover;padding: 72px;background-image: url('../static/assets/img/5-50907_road-wallpaper-photography-of-city-lights.jpg');filter: saturate(56%) sepia(67%);"></header>
+<body> {# The start of the HTML Template Content that is being shown to the user through the web browser #}
+    <nav class="navbar navbar-light navbar-expand bg-light navigation-clean"> {# Nav tag that has the classes "navbar, navbar-light, navbar-expand..." assigned to it #}
+        <div class="container"><a class="navbar-brand" href="#">Local Freight Services</a>{# Title that is shown on the top of the main page on the header #}<button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
+            <div class="collapse navbar-collapse" id="navcol-1"><a class="btn btn-primary ml-auto" role="button" href="{{ url_for('login') }}">Sign In</a></div> {# Login button that uses jinja to find the flask login url #}
+        </div> {# Closure of the Div Tag #}
+    </nav> {# Closure of the Nav Tag #}
+    <header class="masthead text-white text-center" style="background: url('../static/assets/img/bg-masthead.jpg')no-repeat center center;background-size: cover;padding: 72px;background-image: url('../static/assets/img/5-50907_road-wallpaper-photography-of-city-lights.jpg');filter: saturate(56%) sepia(67%);"></header> {# Header tag that contains a background image for the main page #}
     <section class="features-icons bg-light text-center">
-        <div class="container">
-            <div class="row" style="padding-bottom: 60px;">
-                <div class="col">
-                    <h1>Tracking your item here:</h1>
+        <div class="container"> {# Container Class DIV Tag #}
+            <div class="row" style="padding-bottom: 60px;"> {# Row #}
+                <div class="col"> {# Column #}
+                    <h1>Tracking your item here:</h1> {# Text Header Field #}
                     <p><strong>Example</strong>&nbsp;:<em> (e0da-cdf5-11e9)</em><br></p>
-                    <form action="{{ url_for('tracker') }}" method="post">
+                    <form action="{{ url_for('tracker') }}" method="post"> {# Form that processes and sends information to a specified url #}
                         <div class="form-row">
-                            <div class="col"><input class="form-control" type="text" name="trackingId"></div>
-                            <div class="col-auto" style="width: 110px;"><button class="btn btn-primary" type="submit" style="width: 78px;">Track</button></div>
+                            <div class="col"><input class="form-control" type="text" name="trackingId"></div> {# Contains information that will be sent #}
+                            <div class="col-auto" style="width: 110px;"><button class="btn btn-primary" type="submit" style="width: 78px;">Track</button></div> {# Sends the information #}
                         </div>
-                    </form>
+                    </form> {# Closure of the FORM Tag #}
                 </div>
             </div>
+            {# Below is further aesthetics that explain some of LFS' use cases and testimonials as well as links to other areas of the website #}
             <div class="row">
                 <div class="col-lg-4">
                     <div class="mx-auto features-icons-item mb-5 mb-lg-0 mb-lg-3">
                         <div class="d-flex features-icons-icon"><i class="icon-calculator m-auto text-primary" data-bs-hover-animate="pulse"></i></div>
                         <h3>Calculate Postage</h3>
-                        <p class="lead mb-0">Grab an estimated cost for the package using the LFS Calculator</p>
+                        <p class="lead mb-0">Grab an estimated cost for the package using the LFS Calculator <a href="{{ url_for("calculator") }}">here</a></p>
                     </div>
                 </div>
                 <div class="col-lg-4">

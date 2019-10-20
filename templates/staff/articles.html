@@ -39,6 +39,7 @@
                                 <div class="form-group d-flex align-items-baseline"><input class="form-control" type="text" name="sender" required="" placeholder="*Sender Customer No." inputmode="numeric"></div>
                                 <div class="form-group d-flex align-items-baseline"><input class="form-control" type="text" name="receiver" required="" placeholder="*Receiver Customer No." inputmode="numeric"></div>
                                 <div class="form-group d-flex align-items-baseline"><input class="form-control" type="text" name="articledesc" required="" placeholder="*Article Description"></div>
+                                <div class="form-group d-flex align-items-baseline"><input class="form-control" type="number" step="0.01" name="weight" required="" placeholder="*Article Weight (kg)." inputmode="numeric"></div>
                                 <div class="form-group d-flex align-items-baseline"><select class="form-control" required="" name="dangerousgoods"><option value=1>Dangerous Goods: True</option><option value=0 selected="">Dangerous Goods: False</option></select></div>
                                 <div class="modal-footer"><button class="btn btn-primary" type="submit">Submit</button></div>
                             </form>
@@ -118,6 +119,7 @@
                                                 <th>Delivery List</th>
                                                 <th>Delivery Date</th>
                                                 <th>Article Desc.</th>
+                                                <th>Article Weight (kg)</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -132,11 +134,12 @@
                                                 <td id="{{ article[1] }}-6">{{article[6]}}<br></td>
                                                 <td id="{{ article[1] }}-7">{{article[7]}}<br></td>
                                                 <td id="{{ article[1] }}-8">{{article[8]}}<br></td>
+                                                <td id="{{ article[1] }}-9">{{article[9]}}<br></td>
                                                 <td><br>
                                                     <div class="dropdown no-arrow" style="width: 15px;"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
                                                         <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in"
                                                             role="menu">
-                                                            <p class="text-center dropdown-header">Controls</p><a class="dropdown-item" role="presentation" href="#">Copy Information</a><a class="dropdown-item" role="presentation" onclick=''>Edit</a><form id="changeStatusForm" method="post" action="{{ url_for("action", act="updateArticleStatus") }}"><input type="hidden" name="articleId{{ article[0] }}" value="{{article[1]}}"/><a class="dropdown-item" role="presentation" href="javascript:{}" onclick="document.getElementById('changeStatusForm').submit();">Change Status</a></form>
+                                                            <p class="text-center dropdown-header">Controls</p><a class="dropdown-item" role="presentation" href="#">Copy Information</a><a class="dropdown-item" role="presentation" onclick=''>Edit</a><form id="changeStatusForm{{ article[1] }}" method="post" action="{{ url_for("action", act="updateArticleStatus") }}"><input type="hidden" name="articleId" value="{{article[1]}}"/><a class="dropdown-item" role="presentation" href="javascript:{}" onclick="document.getElementById('changeStatusForm{{ article[1] }}').submit();">Change Status</a></form>
                                                             <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="#">Delete</a></div>
                                                     </div>
                                                 </td>
